@@ -1,9 +1,8 @@
 const express = require('express');
+const placesRouter = require('./routes/places-routes');
 const app = express();
 
-app.get('/', (req, res) => {
-  res.send('Welcome');
-});
+app.use('/api/places/', placesRouter);
 
 const PORT = process.env.PORT || 3000;
 
