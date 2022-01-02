@@ -9,7 +9,7 @@ const placeSchema = new Schema({
     type: String,
     required: true,
   },
-  Image: {
+  image: {
     type: String,
     required: true,
   },
@@ -28,9 +28,8 @@ const placeSchema = new Schema({
     },
   },
   creator: {
-    type: Types.ObjectId,
+    type: String,
     required: true,
-    ref: 'User',
   },
 });
 

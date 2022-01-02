@@ -5,6 +5,7 @@ const placesRouter = require('./routes/places-routes');
 dotenv.config();
 const app = express();
 
+app.use(express.json());
 app.use('/api/places/', placesRouter);
 
 const PORT = process.env.PORT;
