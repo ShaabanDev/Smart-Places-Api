@@ -1,4 +1,4 @@
-const { model, Schema } = require('mongoose');
+const { model, Schema, Types } = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 const userSchema = new Schema({
   name: {
@@ -20,8 +20,9 @@ const userSchema = new Schema({
     required: true,
   },
   places: {
-    type: String,
+    type: Types.ObjectId,
     required: true,
+    ref: 'Place',
   },
 });
 
