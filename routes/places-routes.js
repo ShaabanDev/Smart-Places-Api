@@ -49,6 +49,35 @@ placesRouter.get('/user/:uid', async (req, res, next) => {
   res.status(200).send(place);
 });
 
+placesRouter.patch('/:pid', async (req, res, next) => {
+  let place;
+  const pid = req.params.pid;
+  const availableUpdates = ["title", "description", "image", "address"];
+  const requestKeys = Object.keys(req.body);
+  const isValid = requestKeys.every((update) =>
+    availableUpdates.includes(update)
+  );
+  if (!isValid) {
+    return next(new HttpError('Invalid Updates, Please Valid it, Then update', 422));
+  }
+
+  try {
+    place = await placeModel.findById(pid);
+    requestKeys.forEach((update) => {
+      place[update] = req.body[update];
+    })
+    await place.save();
+  } catch (err) {
+    const error = new HttpError('error', 400)
+    return next(error)
+  }
+  if (!place) {
+    return next(new HttpError('Could not find a place with the provided id', 404));
+  }
+  res.status(200).json(place);
+
+})
+
 
 
 module.exports = placesRouter;
