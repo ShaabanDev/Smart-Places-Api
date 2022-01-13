@@ -1,4 +1,4 @@
-const { getPlaceByID, postNewPlace, getPlaceByCreatorID, updatePlaceByID, deletePlaceByID } = require('../controllers/place-controllers');
+const { getPlaceByID, postNewPlace, getPlacesByCreatorID: getPlacesByCreatorID, updatePlaceByID, deletePlaceByID } = require('../controllers/place-controllers');
 const HttpError = require('../models/http-error');
 const placeModel = require('../models/placeModel');
 
@@ -13,7 +13,7 @@ placesRouter.get('/:pid', getPlaceByID);
 
 
 // find places by user id
-placesRouter.get('/user/:uid', getPlaceByCreatorID);
+placesRouter.get('/user/:uid', getPlacesByCreatorID);
 
 // update place by id
 

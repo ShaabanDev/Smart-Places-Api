@@ -32,7 +32,7 @@ const postNewPlace = async (req, res, next) => {
 }
 
 // getting place by creator id function
-const getPlaceByCreatorID = async (req, res, next) => {
+const getPlacesByCreatorID = async (req, res, next) => {
     let place;
 
     try {
@@ -93,4 +93,4 @@ const deletePlaceByID = async (req, res, next) => {
     }
     res.status(200).json(place);
 }
-module.exports = { getPlaceByID, postNewPlace, getPlaceByCreatorID, updatePlaceByID, deletePlaceByID }
+module.exports = { getPlaceByID, postNewPlace, getPlacesByCreatorID, updatePlaceByID, deletePlaceByID }
