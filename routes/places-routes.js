@@ -25,7 +25,7 @@ placesRouter.get('/:pid', async (req, res, next) => {
   }
 
   if (!place) {
-    next(new HttpError('Could not find a place with the provided id', 404));
+    return next(new HttpError('Could not find a place with the provided id', 404));
   }
   res.status(200).send(place);
 });
@@ -48,6 +48,8 @@ placesRouter.get('/user/:uid', async (req, res, next) => {
   }
   res.status(200).send(place);
 });
+
+// update place by id
 
 placesRouter.patch('/:pid', async (req, res, next) => {
   let place;
@@ -78,6 +80,19 @@ placesRouter.patch('/:pid', async (req, res, next) => {
 
 })
 
+// delete place by id 
 
+placesRouter.delete('/:pid', async (req, res, next) => {
+  let place;
+  try {
+    place = await placeModel.findOneAndDelete({ _id: req.params.pid });
+  } catch (err) {
+    const error = new HttpError('Some thing Went Wrong, Please try again later.');
+  }
+  if (!place) {
+    return next(new HttpError('Could not find a place with the provided id', 404));
+  }
+  res.status(200).json(place);
+})
 
 module.exports = placesRouter;
