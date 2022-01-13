@@ -1,3 +1,4 @@
+const HttpError = require('../models/http-error');
 const placeModel = require('../models/placeModel');
 
 const placesRouter = require('express').Router();
@@ -5,36 +6,49 @@ const placesRouter = require('express').Router();
 
 // create new place
 placesRouter.post('/', async (req, res, next) => {
-  try {
-    const place = new placeModel({ ...req.body });
-    await place.save();
-    res.status(200).send();
-  } catch (error) {
-    console.log(error);
-  }
+
+  const place = new placeModel({ ...req.body });
+  await place.save();
+  res.status(200).send();
+
 });
 
 // find place by place id
-placesRouter.get('/:pid', async (req, res) => {
+placesRouter.get('/:pid', async (req, res, next) => {
+  let place;
   try {
     const placeID = req.params.pid;
-    const place = await placeModel.findById(placeID);
-    res.status(200).send(place);
-  } catch (error) {
-    console.log(error);
+    place = await placeModel.findById(placeID);
+  } catch (err) {
+    const error = new HttpError('Fetching places failed, Please try again later.', 500);
+    return next(error)
   }
+
+  if (!place) {
+    next(new HttpError('Could not find a place with the provided id', 404));
+  }
+  res.status(200).send(place);
 });
 
 
 // find places by user id
-placesRouter.get('/user/:uid', async (req, res) => {
+placesRouter.get('/user/:uid', async (req, res, next) => {
+  let place;
+
   try {
     const userID = req.params.uid;
-    const place = await placeModel.find({ creator: userID });
-    res.status(200).send(place);
-  } catch (error) {
-    console.log(error);
+    place = await placeModel.find({ creator: userID });
+  } catch (err) {
+    const error = new HttpError('Fetching places failed, Please try again later.', 500)
+    return next(error);
   }
+
+  if (place.length === 0 || !place) {
+    return next(new HttpError('Could not find a place with the provided id', 404));
+  }
+  res.status(200).send(place);
 });
+
+
 
 module.exports = placesRouter;
