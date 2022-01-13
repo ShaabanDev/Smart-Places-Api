@@ -2,6 +2,8 @@ const placeModel = require('../models/placeModel');
 
 const placesRouter = require('express').Router();
 
+
+// create new place
 placesRouter.post('/', async (req, res, next) => {
   try {
     const place = new placeModel({ ...req.body });
@@ -12,6 +14,7 @@ placesRouter.post('/', async (req, res, next) => {
   }
 });
 
+// find place by place id
 placesRouter.get('/:pid', async (req, res) => {
   try {
     const placeID = req.params.pid;
@@ -22,6 +25,8 @@ placesRouter.get('/:pid', async (req, res) => {
   }
 });
 
+
+// find places by user id
 placesRouter.get('/user/:uid', async (req, res) => {
   try {
     const userID = req.params.uid;
