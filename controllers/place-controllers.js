@@ -54,20 +54,20 @@ const postNewPlace = async (req, res, next) => {
 
 // getting place by creator id function
 const getPlacesByCreatorID = async (req, res, next) => {
-    let place;
+    let userWithPlaces;
 
     try {
         const userID = req.params.uid;
-        place = await placeModel.find({ creator: userID });
+        userWithPlaces = await userModel.findById(userID).populate('places');
     } catch (err) {
         const error = new HttpError('Fetching places failed, Please try again later.', 500)
         return next(error);
     }
 
-    if (place.length === 0 || !place) {
+    if (!userWithPlaces || userWithPlaces.places.length === 0) {
         return next(new HttpError('Could not find a place with the provided id', 404));
     }
-    res.status(200).send(place);
+    res.status(200).json({ places: userWithPlaces.places });
 }
 
 // update place by it's id function
