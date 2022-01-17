@@ -43,7 +43,6 @@ const signup = async (req, res, next) => {
     });
     await user.save();
   } catch (err) {
-    console.log(err);
     return next(
       new HttpError('Could not create a user, Please try again later.', 500)
     );

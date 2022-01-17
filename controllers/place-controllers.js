@@ -63,7 +63,6 @@ const postNewPlace = async (req, res, next) => {
     await user.save({ session: sess });
     await sess.commitTransaction();
   } catch (err) {
-    console.log(err);
     const error = new HttpError(
       'creating place failed, Please try again later.',
       500
@@ -152,7 +151,6 @@ const deletePlaceByID = async (req, res, next) => {
       new HttpError('Could not find a place with the provided id', 404)
     );
   }
-  console.log(place.creator);
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
@@ -161,7 +159,6 @@ const deletePlaceByID = async (req, res, next) => {
     await place.creator.save({ session: sess });
     await sess.commitTransaction();
   } catch (err) {
-    console.log(err);
     return next(
       new HttpError('Some thing Went Wrong, Please try again later.', 500)
     );
