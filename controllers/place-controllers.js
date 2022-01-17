@@ -105,13 +105,27 @@ const updatePlaceByID = async (req, res, next) => {
 const deletePlaceByID = async (req, res, next) => {
     let place;
     try {
-        place = await placeModel.findOneAndDelete({ _id: req.params.pid });
+        place = await placeModel.findById(req.params.pid).populate('creator');
     } catch (err) {
-        const error = new HttpError('Some thing Went Wrong, Please try again later.');
+
+        const error = new HttpError('Some thing Went Wrong, Please try again later.', 500);
+        return next(error)
     }
     if (!place) {
         return next(new HttpError('Could not find a place with the provided id', 404));
     }
-    res.status(200).json(place);
+    console.log(place.creator)
+    try {
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+        await place.remove({ session: sess });
+        place.creator.places.pull(place);
+        await place.creator.save({ session: sess });
+        await sess.commitTransaction();
+    } catch (err) {
+        console.log(err)
+        return next(new HttpError('Some thing Went Wrong, Please try again later.', 500));
+    }
+    res.status(200).json({ message: "Place Deleted." });
 }
 module.exports = { getPlaceByID, postNewPlace, getPlacesByCreatorID, updatePlaceByID, deletePlaceByID }

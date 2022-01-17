@@ -28,8 +28,9 @@ const placeSchema = new Schema({
     },
   },
   creator: {
-    type: String,
+    type: Types.ObjectId,
     required: true,
+    ref: 'User'
   },
 });
 
