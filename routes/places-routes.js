@@ -1,6 +1,4 @@
 const { getPlaceByID, postNewPlace, getPlacesByCreatorID: getPlacesByCreatorID, updatePlaceByID, deletePlaceByID } = require('../controllers/place-controllers');
-const HttpError = require('../models/http-error');
-const placeModel = require('../models/placeModel');
 
 const placesRouter = require('express').Router();
 

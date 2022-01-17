@@ -1,7 +1,7 @@
 const usersRoutes = require('express').Router();
+const { signup } = require('../controllers/user-controllers');
 
-usersRoutes.get('/', (req, res, next) => {
-  res.json({ message: 'It works' });
-});
+
+usersRoutes.post('/signup', signup);
 
 module.exports = usersRoutes;

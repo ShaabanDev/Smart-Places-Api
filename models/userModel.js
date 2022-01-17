@@ -15,13 +15,12 @@ const userSchema = new Schema({
     required: true,
     minlength: 6,
   },
-  Image: {
+  image: {
     type: String,
     required: true,
   },
   places: {
     type: Types.ObjectId,
-    required: true,
     ref: 'Place',
   },
 });
