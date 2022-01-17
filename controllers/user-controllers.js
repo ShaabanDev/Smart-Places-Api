@@ -2,14 +2,23 @@ const HttpError = require("../models/http-error");
 const userModel = require("../models/userModel");
 
 
-
+// login function 
+const login = async (req, res, next) => {
+    const { email, password } = req.body;
+    try {
+        const user = await userModel.findByEmailAndPassword(email, password);
+        res.status(200).json(user);
+    } catch (error) {
+        return next(error);
+    }
+}
 
 // sign up function
 const signup = async (req, res, next) => {
     const { name, email, password, } = req.body;
     let userExist;
     try {
-        userExist = await userModel.findOne({ email: req.body.email });
+        userExist = await userModel.findOne({ email });
     } catch (err) {
         return next(new HttpError('Could not create a user, Please try again later.', 500));
     }
@@ -32,4 +41,4 @@ const signup = async (req, res, next) => {
 }
 
 
-module.exports = { signup, }
+module.exports = { signup, login }
