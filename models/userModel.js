@@ -21,10 +21,11 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  places: {
+  places: [{
     type: Types.ObjectId,
+    required: true,
     ref: 'Place',
-  },
+  }],
 });
 
 userSchema.pre("save", async function (next) {

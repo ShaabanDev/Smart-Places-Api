@@ -15,7 +15,7 @@ const login = async (req, res, next) => {
 
 // sign up function
 const signup = async (req, res, next) => {
-    const { name, email, password, } = req.body;
+    const { name, email, password, places } = req.body;
     let userExist;
     try {
         userExist = await userModel.findOne({ email });
@@ -29,7 +29,7 @@ const signup = async (req, res, next) => {
     try {
         user = new userModel({
             name, email, image: "https://dummyimage.com/600x400/000/fff",
-            password,
+            password, places
         });
         await user.save();
     } catch (err) {

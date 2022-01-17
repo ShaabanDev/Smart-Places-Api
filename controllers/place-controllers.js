@@ -1,5 +1,7 @@
+const mongoose = require("mongoose");
 const HttpError = require("../models/http-error");
 const placeModel = require("../models/placeModel");
+const userModel = require("../models/userModel");
 
 
 // get place by id function
@@ -21,10 +23,29 @@ const getPlaceByID = async (req, res, next) => {
 
 // creating new place function
 const postNewPlace = async (req, res, next) => {
-    const place = new placeModel({ ...req.body });
+    const { title, description, image, address, location, creator } = req.body;
+    const place = new placeModel({ title, description, image, address, location, creator });
+    let user;
     try {
-        await place.save();
+        user = await userModel.findById(creator);
+    } catch (error) {
+        return next(new HttpError('Could not add new place, please try again later', 500));
+    }
+    if (!user) {
+        return next(new HttpError('Could not find a user with the provided id', 404));
+    }
+
+
+    try {
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+        await place.save({ session: sess });
+        user.places.push(place);
+        await user.save({ session: sess });
+        await sess.commitTransaction();
+
     } catch (err) {
+        console.log(err)
         const error = new HttpError('creating place failed, Please try again later.', 500)
         return next(error);
     }
