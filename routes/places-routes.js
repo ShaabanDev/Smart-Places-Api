@@ -6,12 +6,14 @@ const {
   updatePlaceByID,
   deletePlaceByID,
 } = require('../controllers/place-controllers');
+const fileUpload = require('../middleware/file-upload');
 
 const placesRouter = require('express').Router();
 
 // create new place
 placesRouter.post(
   '/',
+  fileUpload.single('image'),
   [
     check('title').not().isEmpty(),
     check('description').isLength({ min: 5 }),

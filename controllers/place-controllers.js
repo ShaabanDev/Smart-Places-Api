@@ -36,7 +36,7 @@ const postNewPlace = async (req, res, next) => {
   const place = new placeModel({
     title,
     description,
-    image,
+    image: req.file.path,
     address,
     location,
     creator,
