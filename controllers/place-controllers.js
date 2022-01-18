@@ -3,6 +3,7 @@ const HttpError = require('../models/http-error');
 const placeModel = require('../models/placeModel');
 const userModel = require('../models/userModel');
 const { validationResult } = require('express-validator');
+const fs = require('fs');
 
 // get place by id function
 const getPlaceByID = async (req, res, next) => {
@@ -151,6 +152,7 @@ const deletePlaceByID = async (req, res, next) => {
       new HttpError('Could not find a place with the provided id', 404)
     );
   }
+  const imagePath = place.image;
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
@@ -163,6 +165,7 @@ const deletePlaceByID = async (req, res, next) => {
       new HttpError('Some thing Went Wrong, Please try again later.', 500)
     );
   }
+  fs.unlink(imagePath);
   res.status(200).json({ message: 'Place Deleted.' });
 };
 module.exports = {
