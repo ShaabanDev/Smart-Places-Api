@@ -42,6 +42,7 @@ const postNewPlace = async (req, res, next) => {
     location,
     creator,
   });
+
   let user;
   try {
     user = await userModel.findById(creator);
@@ -103,7 +104,6 @@ const updatePlaceByID = async (req, res, next) => {
   if (!errors.isEmpty()) {
     return next(new HttpError('Invalid Inputs, Please Check Your Data.', 422));
   }
-  let place;
   const pid = req.params.pid;
   const availableUpdates = ['title', 'description', 'image', 'address'];
   const requestKeys = Object.keys(req.body);
@@ -115,12 +115,16 @@ const updatePlaceByID = async (req, res, next) => {
       new HttpError('Invalid Updates, Please Valid it, Then update', 422)
     );
   }
+  let place;
 
   try {
     place = await placeModel.findById(pid);
     requestKeys.forEach((update) => {
       place[update] = req.body[update];
     });
+    if (place.creator.toString() !== req.userData.userId) {
+      return next(new HttpError('You are not Allowed to edit this place', 401));
+    }
     await place.save();
   } catch (err) {
     const error = new HttpError('error', 400);
@@ -151,6 +155,9 @@ const deletePlaceByID = async (req, res, next) => {
     return next(
       new HttpError('Could not find a place with the provided id', 404)
     );
+  }
+  if (place.creator.id !== req.userData.userId) {
+    return next(new HttpError('You are not Allowed to edit this place', 401));
   }
   const imagePath = place.image;
   try {
