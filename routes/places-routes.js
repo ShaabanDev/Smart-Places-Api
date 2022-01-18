@@ -6,10 +6,17 @@ const {
   updatePlaceByID,
   deletePlaceByID,
 } = require('../controllers/place-controllers');
+const auth = require('../middleware/auth');
 const fileUpload = require('../middleware/file-upload');
-
 const placesRouter = require('express').Router();
 
+// find place by place id
+placesRouter.get('/:pid', getPlaceByID);
+
+// find places by user id
+placesRouter.get('/user/:uid', getPlacesByCreatorID);
+
+placesRouter.use(auth);
 // create new place
 placesRouter.post(
   '/',
@@ -21,12 +28,6 @@ placesRouter.post(
   ],
   postNewPlace
 );
-
-// find place by place id
-placesRouter.get('/:pid', getPlaceByID);
-
-// find places by user id
-placesRouter.get('/user/:uid', getPlacesByCreatorID);
 
 // update place by id
 
