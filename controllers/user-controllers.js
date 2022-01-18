@@ -37,7 +37,7 @@ const signup = async (req, res, next) => {
     user = new userModel({
       name,
       email,
-      image: 'https://dummyimage.com/600x400/000/fff',
+      image: req.file.path,
       password,
       places,
     });
