@@ -33,14 +33,14 @@ const postNewPlace = async (req, res, next) => {
   if (!errors.isEmpty()) {
     return next(new HttpError('Invalid Inputs, Please Check Your Data.', 422));
   }
-  const { title, description, image, address, location, creator } = req.body;
+  const { title, description, address, location } = req.body;
   const place = new placeModel({
     title,
     description,
     image: req.file.path,
     address,
     location,
-    creator,
+    creator: req.userData.userId,
   });
 
   let user;
